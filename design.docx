@@ -1,0 +1,50 @@
+GoodBooks API – Schema Design & Indexes
+Collections
+
+books
+
+Fields: book_id (int, PK), goodreads_book_id, title, authors, original_publication_year, average_rating, ratings_count, image_url, small_image_url
+
+Indexes:
+
+{ title: 1, authors: 1 } → for text/regex searches
+
+{ average_rating: -1 } → for top-rated queries
+
+{ book_id: 1 } → primary lookup
+
+ratings
+
+Fields: user_id, book_id, rating
+
+Indexes:
+
+{ book_id: 1 } → get all ratings for a book
+
+{ user_id: 1, book_id: 1 } → unique, upsert protection
+
+tags
+
+Fields: tag_id, tag_name
+
+Indexes:
+
+{ tag_id: 1 }
+
+{ tag_name: 1 } → filter/search by tag name
+
+book_tags
+
+Fields: goodreads_book_id, tag_id, count
+
+Indexes:
+
+{ tag_id: 1 }, { goodreads_book_id: 1 } → efficient join/filter
+
+to_read
+
+Fields: user_id, book_id
+
+Indexes:
+
+{ user_id: 1, book_id: 1 } → prevent duplicates, fast lookup
